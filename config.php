@@ -1,20 +1,22 @@
 <?php
+$host = getenv("DB_HOST");
+$port = getenv("DB_PORT");
+$dbname = getenv("DB_NAME");
+$user = getenv("DB_USER");
+$password = getenv("DB_PASSWORD");
 
-$db_host = "dpg-d4onnlnpm1nc73ec2f40-a.oregon-postgres.render.com";
-$db_port = "5432";
-$db_name = "shop_db_og56";
-$db_user = "shop_db_og56_user";
-$db_pass = "S4Uo4J8czOGMP1ut0qjkY1uWfQzKNCyx";
+try {
+    // PostgreSQL PDO connection
+    $conn = new PDO(
+        "pgsql:host=$host;port=$port;dbname=$dbname",
+        $user,
+        $password
+    );
 
-// PostgreSQL connection (not MySQL)
-$conn = pg_connect("
-    host=$db_host 
-    port=$db_port 
-    dbname=$db_name 
-    user=$db_user 
-    password=$db_pass
-");
+    // Enable errors
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if (!$conn) {
-    die('Connection failed: ' . pg_last_error());
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
+?>
