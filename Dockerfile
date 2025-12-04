@@ -1,16 +1,13 @@
 FROM php:8.2-apache
 
-# Install PostgreSQL (if you REALLY need it)
-RUN apt-get update && apt-get install -y libpq-dev
-
-# Install MySQL extensions
-RUN docker-php-ext-install mysqli pdo_mysql
-
-# Install PostgreSQL extensions (optional)
-RUN docker-php-ext-install pdo_pgsql pgsql
-
-# Enable Apache rewrite
-RUN a2enmod rewrite
+# Install dependencies for MySQL
+RUN apt-get update && \
+    docker-php-ext-install mysqli pdo_mysql && \
+    a2enmod rewrite && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy project files
 COPY . /var/www/html/
+
+# Set working directory
+WORKDIR /var/www/html
